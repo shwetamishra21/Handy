@@ -106,6 +106,7 @@ fun HandyHoodTheme(
     MaterialTheme(
         colorScheme = colorScheme,
         typography = HandyHoodTypography,
+        shapes = Shapes,
         content = content
     )
 }

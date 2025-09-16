@@ -1,4 +1,4 @@
-package com.handyhood.app.components
+package com.example.handyhood.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -7,9 +7,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.handyhood.app.navigation.Screen
+import com.example.handyhood.navigation.Screen
 
 @Composable
 fun BottomNavigationBar(
@@ -28,7 +27,8 @@ fun BottomNavigationBar(
             val isSelected = currentRoute == screen.route
             val scale by animateFloatAsState(
                 targetValue = if (isSelected) 1.2f else 1.0f,
-                animationSpec = tween(durationMillis = 200)
+                animationSpec = tween(durationMillis = 200),
+                label = "iconScale"
             )
 
             NavigationBarItem(

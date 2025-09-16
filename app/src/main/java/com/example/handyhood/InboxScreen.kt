@@ -1,4 +1,4 @@
-package com.handyhood.app.ui.screens
+package com.example.handyhood.ui.screens
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -19,9 +18,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.handyhood.app.ui.theme.HandyHoodTheme
-import java.text.SimpleDateFormat
-import java.util.*
+import com.example.handyhood.ui.theme.HandyHoodTheme
+import kotlinx.coroutines.delay
 
 data class Message(
     val id: Int,
@@ -163,7 +161,8 @@ fun MessageCard(
     var isPressed by remember { mutableStateOf(false) }
     val cardScale by animateFloatAsState(
         targetValue = if (isPressed) 0.98f else 1f,
-        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy)
+        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
+        label = "cardScale"
     )
 
     ElevatedCard(
@@ -293,7 +292,7 @@ fun MessageCard(
 
     LaunchedEffect(isPressed) {
         if (isPressed) {
-            kotlinx.coroutines.delay(100)
+            delay(100)
             isPressed = false
         }
     }

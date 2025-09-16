@@ -1,4 +1,4 @@
-package com.handyhood.app.navigation
+package com.example.handyhood.navigation
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
@@ -14,8 +14,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.handyhood.app.components.BottomNavigationBar
-import com.handyhood.app.ui.screens.*
+import com.example.handyhood.components.BottomNavigationBar
+import com.example.handyhood.ui.screens.*
 
 sealed class Screen(val route: String, val title: String, val icon: androidx.compose.ui.graphics.vector.ImageVector) {
     object Welcome : Screen("welcome", "Welcome", Icons.Default.Home)
@@ -62,7 +62,7 @@ fun HandyHoodNavigation() {
     ) { paddingValues ->
         NavHost(
             navController = navController,
-            startDestination = Screen.Welcome.route,
+            startDestination = Screen.Dashboard.route,
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(

@@ -1,9 +1,10 @@
-package com.handyhood.app.ui.screens
+package com.example.handyhood.ui.screens
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -16,7 +17,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.handyhood.app.ui.theme.HandyHoodTheme
+import com.example.handyhood.ui.theme.HandyHoodTheme
 
 data class SearchResult(
     val id: Int,
@@ -39,7 +40,8 @@ fun SearchScreen(
     var sortBy by remember { mutableStateOf("Relevance") }
 
     val filterIconRotation by animateFloatAsState(
-        targetValue = if (showFilters) 180f else 0f
+        targetValue = if (showFilters) 180f else 0f,
+        label = "filterIconRotation"
     )
 
     val categories = listOf("All", "Services", "Events", "For Sale", "Lost & Found", "Recommendations")
