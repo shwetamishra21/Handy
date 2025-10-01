@@ -1,152 +1,140 @@
-package com.example.handyhood.ui.screens
+package com.example.handyhood
 
-import androidx.compose.animation.core.*
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.handyhood.ui.theme.HandyHoodTheme
-import kotlinx.coroutines.delay
 
 data class Message(
-    val id: Int,
     val senderName: String,
-    val subject: String,
-    val preview: String,
-    val timestamp: String,
+    val message: String,
+    val time: String,
     val isRead: Boolean,
-    val messageType: MessageType
+    val serviceType: String
 )
-
-enum class MessageType {
-    DIRECT, COMMUNITY, NOTIFICATION
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InboxScreen(
-    modifier: Modifier = Modifier
-) {
-    var selectedTab by remember { mutableStateOf(0) }
-    val tabs = listOf("All", "Direct", "Community", "Notifications")
+fun InboxScreen(modifier: Modifier = Modifier) {
+    val messages = listOf(
+        Message("John Smith", "Hi! I'm interested in your house cleaning service.", "2 hours ago", false, "House Cleaning"),
+        Message("Sarah Wilson", "Thanks for the great plumbing work yesterday!", "5 hours ago", true, "Plumbing"),
+        Message("Mike Brown", "Are you available for dog walking this weekend?", "1 day ago", false, "Pet Care"),
+        Message("Lisa Johnson", "The garden looks amazing! Thank you so much.", "2 days ago", true, "Gardening"),
+        Message("Tom Davis", "Can we schedule the repair for next Tuesday?", "3 days ago", true, "Repairs")
+    )
 
-    val sampleMessages = remember {
-        listOf(
-            Message(1, "Sarah M.", "About Fluffy", "Thank you so much for helping me find...", "2h ago", false, MessageType.DIRECT),
-            Message(2, "HandyHood Team", "Welcome to HandyHood!", "Welcome to your neighborhood community...", "1d ago", true, MessageType.NOTIFICATION),
-            Message(3, "Mike Johnson", "BBQ Reminder", "Just a friendly reminder about the community...", "3h ago", false, MessageType.COMMUNITY),
-            Message(4, "Tom Builder", "Service Inquiry", "Hi! I saw your post about needing a handyman...", "5h ago", true, MessageType.DIRECT),
-            Message(5, "Community Board", "New Event Posted", "A new event has been posted in your area...", "1d ago", false, MessageType.NOTIFICATION),
-            Message(6, "Emma Wilson", "Piano Pickup", "Hi! I'm interested in the free piano you posted...", "2d ago", true, MessageType.DIRECT),
-        )
-    }
-
-    val filteredMessages = when (selectedTab) {
-        1 -> sampleMessages.filter { it.messageType == MessageType.DIRECT }
-        2 -> sampleMessages.filter { it.messageType == MessageType.COMMUNITY }
-        3 -> sampleMessages.filter { it.messageType == MessageType.NOTIFICATION }
-        else -> sampleMessages
-    }
-
-    val unreadCount = sampleMessages.count { !it.isRead }
-
-    Column(
-        modifier = modifier.fillMaxSize()
+    LazyColumn(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        // Header
-        TopAppBar(
-            title = {
-                Column {
-                    Text(
-                        text = "Inbox",
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                    if (unreadCount > 0) {
-                        Text(
-                            text = "$unreadCount unread messages",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                }
-            },
-            actions = {
+        item {
+            // Header
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Messages",
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold
+                )
+
                 IconButton(onClick = { /* Mark all as read */ }) {
                     Icon(
-                        imageVector = Icons.Default.MarkEmailRead,
+                        Icons.Default.MarkEmailRead,
                         contentDescription = "Mark all as read"
                     )
                 }
-                IconButton(onClick = { /* Search messages */ }) {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = "Search"
-                    )
-                }
-            },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant
-            )
-        )
+            }
 
-        // Tabs
-        TabRow(
-            selectedTabIndex = selectedTab,
-            modifier = Modifier.padding(horizontal = 16.dp)
-        ) {
-            tabs.forEachIndexed { index, title ->
-                Tab(
-                    selected = selectedTab == index,
-                    onClick = { selectedTab = index },
-                    text = {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(title)
-                            if (index == 0 && unreadCount > 0) {
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Badge {
-                                    Text(unreadCount.toString())
-                                }
-                            }
-                        }
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Message stats
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                ElevatedCard(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            Icons.Default.Inbox,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Text(
+                            text = "${messages.size}",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = "Total",
+                            style = MaterialTheme.typography.bodySmall
+                        )
                     }
-                )
+                }
+
+                ElevatedCard(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            Icons.Default.MarkEmailUnread,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.error
+                        )
+                        Text(
+                            text = "${messages.count { !it.isRead }}",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = "Unread",
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                }
             }
         }
 
-        // Messages List
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(filteredMessages) { message ->
-                MessageCard(
-                    message = message,
-                    onClick = { /* Open message */ },
-                    onMarkAsRead = { /* Mark as read */ },
-                    onDelete = { /* Delete message */ }
-                )
-            }
+        item {
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Recent Messages",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.SemiBold
+            )
+        }
 
-            if (filteredMessages.isEmpty()) {
-                item {
-                    EmptyInboxState()
-                }
-            }
+        items(messages) { message ->
+            MessageCard(
+                message = message,
+                onClick = { /* Handle message click */ }
+            )
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(80.dp)) // Bottom padding for navigation
         }
     }
 }
@@ -154,33 +142,17 @@ fun InboxScreen(
 @Composable
 fun MessageCard(
     message: Message,
-    onClick: () -> Unit,
-    onMarkAsRead: () -> Unit,
-    onDelete: () -> Unit
+    onClick: () -> Unit
 ) {
-    var isPressed by remember { mutableStateOf(false) }
-    val cardScale by animateFloatAsState(
-        targetValue = if (isPressed) 0.98f else 1f,
-        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
-        label = "cardScale"
-    )
-
     ElevatedCard(
-        onClick = {
-            isPressed = true
-            onClick()
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .scale(cardScale),
-        elevation = CardDefaults.elevatedCardElevation(
-            defaultElevation = if (!message.isRead) 4.dp else 2.dp
-        ),
+        onClick = onClick,
+        modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.elevatedCardColors(
-            containerColor = if (!message.isRead)
+            containerColor = if (!message.isRead) {
                 MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.1f)
-            else
+            } else {
                 MaterialTheme.colorScheme.surface
+            }
         )
     ) {
         Row(
@@ -189,66 +161,43 @@ fun MessageCard(
                 .padding(16.dp),
             verticalAlignment = Alignment.Top
         ) {
-            // Unread Indicator
-            if (!message.isRead) {
-                Box(
-                    modifier = Modifier
-                        .size(12.dp)
-                        .background(
-                            MaterialTheme.colorScheme.primary,
-                            CircleShape
-                        )
+            // Avatar/Icon
+            Card(
+                modifier = Modifier.size(48.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.primary
                 )
-                Spacer(modifier = Modifier.width(12.dp))
-            } else {
-                Spacer(modifier = Modifier.width(24.dp))
-            }
-
-            // Avatar
-            Box(
-                modifier = Modifier
-                    .size(40.dp)
-                    .clip(CircleShape)
-                    .background(
-                        when (message.messageType) {
-                            MessageType.DIRECT -> MaterialTheme.colorScheme.primary
-                            MessageType.COMMUNITY -> MaterialTheme.colorScheme.secondary
-                            MessageType.NOTIFICATION -> MaterialTheme.colorScheme.tertiary
-                        }
-                    ),
-                contentAlignment = Alignment.Center
             ) {
-                val icon = when (message.messageType) {
-                    MessageType.DIRECT -> Icons.Default.Person
-                    MessageType.COMMUNITY -> Icons.Default.Group
-                    MessageType.NOTIFICATION -> Icons.Default.Notifications
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = message.senderName.split(" ").map { it.first() }.joinToString(""),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier.size(20.dp)
-                )
             }
 
             Spacer(modifier = Modifier.width(12.dp))
 
-            // Content
             Column(modifier = Modifier.weight(1f)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.Top
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         text = message.senderName,
                         style = MaterialTheme.typography.titleSmall,
-                        fontWeight = if (!message.isRead) FontWeight.Bold else FontWeight.Medium,
-                        modifier = Modifier.weight(1f)
+                        fontWeight = if (!message.isRead) FontWeight.Bold else FontWeight.Medium
                     )
+
                     Text(
-                        text = message.timestamp,
-                        style = MaterialTheme.typography.labelSmall,
+                        text = message.time,
+                        style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
@@ -256,78 +205,40 @@ fun MessageCard(
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = message.subject,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = if (!message.isRead) FontWeight.SemiBold else FontWeight.Normal,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    text = message.serviceType,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.primary
                 )
 
-                Spacer(modifier = Modifier.height(2.dp))
+                Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = message.preview,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    text = message.message,
+                    style = MaterialTheme.typography.bodyMedium,
                     maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
+                    color = if (!message.isRead) {
+                        MaterialTheme.colorScheme.onSurface
+                    } else {
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                    }
                 )
             }
 
-            // Actions
-            Column {
-                IconButton(
-                    onClick = onMarkAsRead,
-                    modifier = Modifier.size(24.dp)
+            if (!message.isRead) {
+                Box(
+                    modifier = Modifier
+                        .size(8.dp)
+                        .padding(top = 4.dp)
                 ) {
-                    Icon(
-                        imageVector = if (message.isRead) Icons.Default.MarkEmailUnread else Icons.Default.MarkEmailRead,
-                        contentDescription = if (message.isRead) "Mark as unread" else "Mark as read",
-                        modifier = Modifier.size(16.dp)
-                    )
+                    Card(
+                        modifier = Modifier.fillMaxSize(),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.primary
+                        )
+                    ) {}
                 }
             }
         }
-    }
-
-    LaunchedEffect(isPressed) {
-        if (isPressed) {
-            delay(100)
-            isPressed = false
-        }
-    }
-}
-
-@Composable
-fun EmptyInboxState() {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Icon(
-            imageVector = Icons.Default.Inbox,
-            contentDescription = "Empty inbox",
-            modifier = Modifier.size(64.dp),
-            tint = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = "No messages yet",
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
-            text = "When you receive messages, they'll appear here",
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
     }
 }
 

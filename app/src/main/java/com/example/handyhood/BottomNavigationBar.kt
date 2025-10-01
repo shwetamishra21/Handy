@@ -1,56 +1,32 @@
-package com.example.handyhood.components
+package com.example.handyhood
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.unit.dp
-import com.example.handyhood.navigation.Screen
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 
 @Composable
 fun BottomNavigationBar(
     screens: List<Screen>,
     currentRoute: String?,
-    onScreenSelected: (Screen) -> Unit,
-    modifier: Modifier = Modifier
+    onScreenSelected: (Screen) -> Unit
 ) {
     NavigationBar(
-        modifier = modifier,
-        containerColor = MaterialTheme.colorScheme.surfaceVariant,
-        contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        tonalElevation = 8.dp
+        containerColor = MaterialTheme.colorScheme.surfaceVariant
     ) {
         screens.forEach { screen ->
-            val isSelected = currentRoute == screen.route
-            val scale by animateFloatAsState(
-                targetValue = if (isSelected) 1.2f else 1.0f,
-                animationSpec = tween(durationMillis = 200),
-                label = "iconScale"
-            )
-
             NavigationBarItem(
                 icon = {
                     Icon(
                         imageVector = screen.icon,
-                        contentDescription = screen.title,
-                        modifier = Modifier.scale(scale)
+                        contentDescription = screen.title
                     )
                 },
-                label = {
-                    Text(
-                        text = screen.title,
-                        style = MaterialTheme.typography.labelSmall
-                    )
-                },
-                selected = isSelected,
+                label = { Text(screen.title) },
+                selected = currentRoute == screen.route,
                 onClick = { onScreenSelected(screen) },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.primary,
                     selectedTextColor = MaterialTheme.colorScheme.primary,
-                    indicatorColor = MaterialTheme.colorScheme.primaryContainer,
                     unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
                 )

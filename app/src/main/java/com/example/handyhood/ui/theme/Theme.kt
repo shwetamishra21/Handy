@@ -16,72 +16,31 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = PeachPrimary,
-    onPrimary = PeachOnPrimary,
-    primaryContainer = PeachPrimaryDark,
-    onPrimaryContainer = PeachOnPrimaryContainer,
-    secondary = PeachSecondary,
-    onSecondary = PeachOnSecondary,
-    secondaryContainer = PeachSecondaryDark,
-    onSecondaryContainer = PeachOnSecondaryContainer,
-    tertiary = PeachTertiary,
-    onTertiary = PeachOnTertiary,
-    tertiaryContainer = PeachTertiaryDark,
-    onTertiaryContainer = PeachOnTertiaryContainer,
-    error = ErrorDark,
-    onError = OnErrorDark,
-    errorContainer = ErrorContainerDark,
-    onErrorContainer = OnErrorContainerDark,
-    background = BackgroundDark,
-    onBackground = OnBackgroundDark,
-    surface = SurfaceDark,
-    onSurface = OnSurfaceDark,
-    surfaceVariant = SurfaceVariantDark,
-    onSurfaceVariant = OnSurfaceVariantDark,
-    outline = OutlineDark,
-    outlineVariant = OutlineVariantDark,
-    scrim = Scrim,
-    inverseSurface = InverseSurfaceDark,
-    inverseOnSurface = InverseOnSurfaceDark,
-    inversePrimary = InversePrimaryDark,
-    surfaceTint = PeachPrimary
+    primary = Purple80,
+    secondary = PurpleGrey80,
+    tertiary = Pink80
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = PeachPrimary,
-    onPrimary = PeachOnPrimary,
-    primaryContainer = PeachPrimaryLight,
-    onPrimaryContainer = PeachOnPrimaryContainer,
-    secondary = PeachSecondary,
-    onSecondary = PeachOnSecondary,
-    secondaryContainer = PeachSecondaryLight,
-    onSecondaryContainer = PeachOnSecondaryContainer,
-    tertiary = PeachTertiary,
-    onTertiary = PeachOnTertiary,
-    tertiaryContainer = PeachTertiaryLight,
-    onTertiaryContainer = PeachOnTertiaryContainer,
-    error = ErrorLight,
-    onError = OnErrorLight,
-    errorContainer = ErrorContainerLight,
-    onErrorContainer = OnErrorContainerLight,
-    background = BackgroundLight,
-    onBackground = OnBackgroundLight,
-    surface = SurfaceLight,
-    onSurface = OnSurfaceLight,
-    surfaceVariant = SurfaceVariantLight,
-    onSurfaceVariant = OnSurfaceVariantLight,
-    outline = OutlineLight,
-    outlineVariant = OutlineVariantLight,
-    scrim = Scrim,
-    inverseSurface = InverseSurfaceLight,
-    inverseOnSurface = InverseOnSurfaceLight,
-    inversePrimary = InversePrimaryLight,
-    surfaceTint = PeachPrimary
+    primary = HandyPrimary,
+    secondary = HandySecondary,
+    tertiary = Pink40
+
+    /* Other default colors to override
+    background = Color(0xFFFFFBFE),
+    surface = Color(0xFFFFFBFE),
+    onPrimary = Color.White,
+    onSecondary = Color.White,
+    onTertiary = Color.White,
+    onBackground = Color(0xFF1C1B1F),
+    onSurface = Color(0xFF1C1B1F),
+    */
 )
 
 @Composable
 fun HandyHoodTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
+    // Dynamic color is available on Android 12+
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
@@ -90,23 +49,22 @@ fun HandyHoodTheme(
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
+
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
-
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
             window.statusBarColor = colorScheme.primary.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = HandyHoodTypography,
-        shapes = Shapes,
+        typography = Typography,
         content = content
     )
 }

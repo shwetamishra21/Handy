@@ -1,4 +1,4 @@
-package com.example.handyhood.navigation
+package com.example.handyhood
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
@@ -8,16 +8,15 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.handyhood.components.BottomNavigationBar
-import com.example.handyhood.ui.screens.*
 
-sealed class Screen(val route: String, val title: String, val icon: androidx.compose.ui.graphics.vector.ImageVector) {
+sealed class Screen(val route: String, val title: String, val icon: ImageVector) {
     object Welcome : Screen("welcome", "Welcome", Icons.Default.Home)
     object Dashboard : Screen("dashboard", "Dashboard", Icons.Default.Dashboard)
     object Search : Screen("search", "Search", Icons.Default.Search)
@@ -25,7 +24,7 @@ sealed class Screen(val route: String, val title: String, val icon: androidx.com
     object Profile : Screen("profile", "Profile", Icons.Default.Person)
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HandyHoodNavigation() {
     val navController = rememberNavController()
@@ -65,15 +64,7 @@ fun HandyHoodNavigation() {
             startDestination = Screen.Dashboard.route,
             modifier = Modifier.padding(paddingValues)
         ) {
-            composable(
-                Screen.Welcome.route,
-                enterTransition = {
-                    fadeIn(animationSpec = tween(300))
-                },
-                exitTransition = {
-                    fadeOut(animationSpec = tween(300))
-                }
-            ) {
+            composable(Screen.Welcome.route) {
                 WelcomeScreen(
                     onGetStartedClick = {
                         navController.navigate(Screen.Dashboard.route) {
@@ -83,75 +74,19 @@ fun HandyHoodNavigation() {
                 )
             }
 
-            composable(
-                Screen.Dashboard.route,
-                enterTransition = {
-                    slideInHorizontally(
-                        initialOffsetX = { 300 },
-                        animationSpec = tween(300)
-                    ) + fadeIn(animationSpec = tween(300))
-                },
-                exitTransition = {
-                    slideOutHorizontally(
-                        targetOffsetX = { -300 },
-                        animationSpec = tween(300)
-                    ) + fadeOut(animationSpec = tween(300))
-                }
-            ) {
+            composable(Screen.Dashboard.route) {
                 DashboardScreen()
             }
 
-            composable(
-                Screen.Search.route,
-                enterTransition = {
-                    slideInHorizontally(
-                        initialOffsetX = { 300 },
-                        animationSpec = tween(300)
-                    ) + fadeIn(animationSpec = tween(300))
-                },
-                exitTransition = {
-                    slideOutHorizontally(
-                        targetOffsetX = { -300 },
-                        animationSpec = tween(300)
-                    ) + fadeOut(animationSpec = tween(300))
-                }
-            ) {
+            composable(Screen.Search.route) {
                 SearchScreen()
             }
 
-            composable(
-                Screen.Inbox.route,
-                enterTransition = {
-                    slideInHorizontally(
-                        initialOffsetX = { 300 },
-                        animationSpec = tween(300)
-                    ) + fadeIn(animationSpec = tween(300))
-                },
-                exitTransition = {
-                    slideOutHorizontally(
-                        targetOffsetX = { -300 },
-                        animationSpec = tween(300)
-                    ) + fadeOut(animationSpec = tween(300))
-                }
-            ) {
+            composable(Screen.Inbox.route) {
                 InboxScreen()
             }
 
-            composable(
-                Screen.Profile.route,
-                enterTransition = {
-                    slideInHorizontally(
-                        initialOffsetX = { 300 },
-                        animationSpec = tween(300)
-                    ) + fadeIn(animationSpec = tween(300))
-                },
-                exitTransition = {
-                    slideOutHorizontally(
-                        targetOffsetX = { -300 },
-                        animationSpec = tween(300)
-                    ) + fadeOut(animationSpec = tween(300))
-                }
-            ) {
+            composable(Screen.Profile.route) {
                 ProfileScreen()
             }
         }

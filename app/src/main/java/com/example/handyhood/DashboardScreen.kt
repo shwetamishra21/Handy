@@ -1,12 +1,14 @@
-package com.example.handyhood.ui.screens
+package com.example.handyhood
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -15,158 +17,153 @@ import com.example.handyhood.ui.theme.HandyHoodTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DashboardScreen() {
-    val posts = listOf(
-        "Lost Cat - Fluffy" to "Sarah M.",
-        "Community BBQ This Saturday" to "Mike Johnson",
-        "Handyman Available" to "Tom Builder",
-        "Free Piano" to "Emma Wilson",
-        "Power Outage Alert" to "Alex Chen"
+fun DashboardScreen(modifier: Modifier = Modifier) {
+    val categories = listOf("Home Services", "Pet Care", "Gardening", "Repairs", "Moving", "Tutoring")
+    val recentServices = listOf(
+        "Plumbing Service" to Icons.Default.Build,
+        "Dog Walking" to Icons.Default.Pets,
+        "House Cleaning" to Icons.Default.Home,
+        "Garden Maintenance" to Icons.Default.Grass
     )
 
     LazyColumn(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-        contentPadding = PaddingValues(vertical = 16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Header
         item {
+            // Welcome Header
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer
-                )
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
-                Column(modifier = Modifier.padding(20.dp)) {
+                Column(
+                    modifier = Modifier.padding(16.dp)
+                ) {
                     Text(
-                        text = "HandyHood",
+                        text = "Welcome to HandyHood!",
                         style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                    Text(
-                        text = "Connect with your neighborhood",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
-                    )
-                }
-            }
-        }
-
-        // Welcome Card
-        item {
-            ElevatedCard(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.elevatedCardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant
-                )
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = "Welcome to HandyHood! 👋",
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Connect with your neighbors, share resources, and build a stronger community together.",
-                        style = MaterialTheme.typography.bodyMedium,
+                        text = "Find trusted neighbors for all your service needs",
+                        style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
         }
 
-        // Quick Actions
         item {
-            ElevatedCard(modifier = Modifier.fillMaxWidth()) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = "Quick Actions",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold
+            // Categories Section
+            Text(
+                text = "Service Categories",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.SemiBold
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(categories) { category ->
+                    ElevatedFilterChip(
+                        onClick = { /* Handle category selection */ },
+                        label = { Text(category) },
+                        selected = false
                     )
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        FilledTonalButton(
-                            onClick = { },
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Icon(Icons.Default.Search, contentDescription = null)
-                            Spacer(Modifier.width(4.dp))
-                            Text("Search")
-                        }
-                        FilledTonalButton(
-                            onClick = { },
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Icon(Icons.Default.Settings, contentDescription = null)
-                            Spacer(Modifier.width(4.dp))
-                            Text("Settings")
-                        }
-                    }
                 }
             }
         }
 
-        // Community Posts
-        items(posts) { (title, author) ->
+        item {
+            // Recent Services Section
+            Text(
+                text = "Popular Services",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.SemiBold
+            )
+        }
+
+        items(recentServices) { (serviceName, icon) ->
             ElevatedCard(
-                modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.elevatedCardElevation(2.dp)
+                onClick = { /* Handle service selection */ },
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    // Author
-                    Text(
-                        text = author,
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Medium
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = serviceName,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(32.dp)
                     )
-                    Spacer(modifier = Modifier.height(4.dp))
 
-                    // Title
-                    Text(
-                        text = title,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.width(16.dp))
 
-                    // Sample content
-                    Text(
-                        text = "Community post content goes here. This is a sample description of what neighbors are sharing in HandyHood.",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    // Actions
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        TextButton(onClick = { }) {
-                            Icon(Icons.Default.Star, contentDescription = null)
-                            Spacer(Modifier.width(4.dp))
-                            Text("Like")
-                        }
-                        TextButton(onClick = { }) {
-                            Icon(Icons.Default.Share, contentDescription = null)
-                            Spacer(Modifier.width(4.dp))
-                            Text("Share")
-                        }
-                        TextButton(onClick = { }) {
-                            Icon(Icons.Default.Info, contentDescription = null)
-                            Spacer(Modifier.width(4.dp))
-                            Text("Details")
-                        }
+                    Column {
+                        Text(
+                            text = serviceName,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Text(
+                            text = "Available in your area",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     }
+
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    Icon(
+                        imageVector = Icons.Default.ChevronRight,
+                        contentDescription = "View details",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Quick Actions
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Button(
+                    onClick = { /* Post a service */ },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Post Service")
+                }
+
+                OutlinedButton(
+                    onClick = { /* Find services */ },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Find Services")
                 }
             }
         }
